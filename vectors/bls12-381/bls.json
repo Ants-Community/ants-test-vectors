@@ -1,0 +1,83 @@
+{
+  "primitive": "bls.sign / bls.verify / bls.aggregate / bls.verify_aggregate / bls.pubkey_from_priv",
+  "spec":      "RFC-0008 §3.3 (L2 PoUH committee aggregate signatures); IETF draft-irtf-cfrg-bls-signature-05 (BLS Signatures) with the BLS_SIG_BLS12381G2_XMD:SHA-256_SSWU_RO_NUL_ ciphersuite",
+  "version":   1,
+  "vendor":    "supranational/blst v0.3.15 portable C path (https://github.com/supranational/blst/releases/tag/v0.3.15); ciphersuite identifier matches the IETF draft 'Basic' scheme with the minimal-pubkey-size variant (PK in G1 = 48 bytes compressed, signature in G2 = 96 bytes compressed)",
+  "notes":     "All vectors below use small fixed integer secret keys (sk = 1, 2, 3) for reproducibility; ANY conformant BLS implementation MUST produce byte-for-byte identical pk/sig values. The first vector (sk=1) is a universal cross-implementation invariant: pk(1) is the G1 generator's compressed Zcash encoding.",
+  "vectors": [
+    {
+      "name":     "sk=1 ⇒ pk = G1 generator (curve-definition invariant)",
+      "sk_hex":   "0000000000000000000000000000000000000000000000000000000000000001",
+      "pk_hex":   "97f1d3a73197d7942695638c4fa9ac0fc3688c4f9774b905a14e3a3f171bac586c55e83ff97a1aeffb3af00adb22c6bb",
+      "msg_hex":  "414e545320506f554820636f6d6d697474656520626c6f636b2068617368",
+      "msg_text": "ANTS PoUH committee block hash",
+      "msg_len":  30,
+      "sig_hex":  "8b1ef444e2a2e97e4d14be05edd542e6c1ea51fed632c9039c6a1b41b348bf391e15cdf6eb37063e260579231063875e0e12c60cc7537a86218e39b98a41342590134f4c8fbe905040f2954ce786aff5df7d1f41b5d811f8f8a1a61d71623953"
+    },
+    {
+      "name":     "sk=2 single sign/verify",
+      "sk_hex":   "0000000000000000000000000000000000000000000000000000000000000002",
+      "pk_hex":   "a572cbea904d67468808c8eb50a9450c9721db309128012543902d0ac358a62ae28f75bb8f1c7c42c39a8c5529bf0f4e",
+      "msg_hex":  "414e545320506f554820636f6d6d697474656520626c6f636b2068617368",
+      "msg_text": "ANTS PoUH committee block hash",
+      "msg_len":  30,
+      "sig_hex":  "b6b0a441cae50f3901969489244c0bc2bea3dc648e90fc5bdd8d1969c9ff516ccb7b229c6747819628b8c9f334ae436b096ac09b2622ce598345780fe5bde8f0d72d14db24f015b873f4f6f2331230e32aba2112d5718fe21d8385faf769ded0"
+    },
+    {
+      "name":     "sk=3 single sign/verify",
+      "sk_hex":   "0000000000000000000000000000000000000000000000000000000000000003",
+      "pk_hex":   "89ece308f9d1f0131765212deca99697b112d61f9be9a5f1f3780a51335b3ff981747a0b2ca2179b96d2c0c9024e5224",
+      "msg_hex":  "414e545320506f554820636f6d6d697474656520626c6f636b2068617368",
+      "msg_text": "ANTS PoUH committee block hash",
+      "msg_len":  30,
+      "sig_hex":  "8aeb7175a98a51cad2c1ce810cbf95bcec8d1df9d7622c4c2e619308fe2a16be1a4f06939a6ab4a5ff0ff682d849609c035024d2523b05e44b7ba647b17e8aef973fc927965a796a274dd74bc3b6e92cf88f2ae9250e737596adeef4aad2f3c0"
+    }
+  ],
+  "aggregate_vectors": [
+    {
+      "name":          "aggregate(sig1, sig2, sig3) over the same message; verify against (pk1, pk2, pk3)",
+      "component_sks": [
+        "0000000000000000000000000000000000000000000000000000000000000001",
+        "0000000000000000000000000000000000000000000000000000000000000002",
+        "0000000000000000000000000000000000000000000000000000000000000003"
+      ],
+      "component_pks": [
+        "97f1d3a73197d7942695638c4fa9ac0fc3688c4f9774b905a14e3a3f171bac586c55e83ff97a1aeffb3af00adb22c6bb",
+        "a572cbea904d67468808c8eb50a9450c9721db309128012543902d0ac358a62ae28f75bb8f1c7c42c39a8c5529bf0f4e",
+        "89ece308f9d1f0131765212deca99697b112d61f9be9a5f1f3780a51335b3ff981747a0b2ca2179b96d2c0c9024e5224"
+      ],
+      "msg_hex":       "414e545320506f554820636f6d6d697474656520626c6f636b2068617368",
+      "msg_text":      "ANTS PoUH committee block hash",
+      "msg_len":       30,
+      "agg_sig_hex":   "876962b51891f73d954c72e313764c2b62226c5636a46d76faa74c04ff5b28cadab4b29918e58e16e25f6f26f32dc0570dcd8b70b5e08f7b07c2b8e708993bb5a24504791e1c37efe5d3eead1655df280044aa9b08904b501085c712adff5a38",
+      "notes":         "FastAggregateVerify per draft-irtf-cfrg-bls-signature-05 §3.3.4: all n public keys MUST correspond to signatures over the SAME message. Used by the L2 PoUH committee to finalise blocks with a single 96-byte signature regardless of committee size."
+    }
+  ],
+  "negative_vectors": [
+    {
+      "name":     "scalar 0 is not a valid SK",
+      "sk_hex":   "0000000000000000000000000000000000000000000000000000000000000000",
+      "expected": "ANTS_ERROR_MALFORMED",
+      "notes":    "blst_sk_check rejects scalar 0 and scalars ≥ curve order; the wrapper surfaces this as MALFORMED."
+    },
+    {
+      "name":     "tampered signature (bit-flip in sig[0])",
+      "based_on": "sk=1 sign/verify",
+      "tamper":   "sig[0] ^= 0x01",
+      "expected": "ANTS_ERROR_MALFORMED",
+      "notes":    "Single-bit flip either yields a non-G2 decompression or a wrong G2 point; both reject."
+    },
+    {
+      "name":     "cross-verification (sig1 against pk2)",
+      "based_on": "sk=1 sig with sk=2 pk",
+      "expected": "ANTS_ERROR_MALFORMED",
+      "notes":    "Aspect of unforgeability: sig produced by SK_a does not verify under PK_b."
+    },
+    {
+      "name":     "wrong-message aggregate-verify",
+      "based_on": "aggregate(sig1,sig2,sig3) over message A, verify_aggregate over message B",
+      "expected": "ANTS_ERROR_MALFORMED",
+      "notes":    "FastAggregateVerify is binding to the message; verifying against a different message MUST fail."
+    }
+  ]
+}

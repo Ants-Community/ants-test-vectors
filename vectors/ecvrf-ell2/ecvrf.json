@@ -1,0 +1,73 @@
+{
+  "primitive": "ecvrf.prove / ecvrf.verify",
+  "spec":      "RFC-0008 §4.2 (Verifiable Random Function); RFC 9381 ECVRF-EDWARDS25519-SHA512-ELL2 (ciphersuite suite_string = 0x04)",
+  "version":   1,
+  "vendor":    "in-tree implementation in ants-client/foundation/crypto, built on libsodium 1.0.22 ref10 fe25519/ge25519/sc25519 primitives; hash-to-curve uses the RFC 9380 ELL2_NU suite edwards25519_XMD:SHA-512_ELL2_NU_",
+  "notes":     "All three positive vectors are copied verbatim from RFC 9381 §B.4 Examples 19, 20, 21. The 32-byte 'sk' is the same Ed25519 seed used in RFC 8032 §7.1; pi is 80 bytes (Gamma || c[16] || s[32]); beta is the 64-byte SHA-512 output. The implementation passes these byte-for-byte against the in-tree test_crypto suite.",
+  "vectors": [
+    {
+      "name":      "RFC 9381 §B.4 Example 19 (empty alpha)",
+      "sk_hex":    "9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60",
+      "pk_hex":    "d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a",
+      "alpha_hex": "",
+      "alpha_len": 0,
+      "pi_hex":    "7d9c633ffeee27349264cf5c667579fc583b4bda63ab71d001f89c10003ab46f14adf9a3cd8b8412d9038531e865c341cafa73589b023d14311c331a9ad15ff2fb37831e00f0acaa6d73bc9997b06501",
+      "beta_hex":  "9d574bf9b8302ec0fc1e21c3ec5368269527b87b462ce36dab2d14ccf80c53cccf6758f058c5b1c856b116388152bbe509ee3b9ecfe63d93c3b4346c1fbc6c54"
+    },
+    {
+      "name":      "RFC 9381 §B.4 Example 20 (one-byte alpha 0x72)",
+      "sk_hex":    "4ccd089b28ff96da9db6c346ec114e0f5b8a319f35aba624da8cf6ed4fb8a6fb",
+      "pk_hex":    "3d4017c3e843895a92b70aa74d1b7ebc9c982ccf2ec4968cc0cd55f12af4660c",
+      "alpha_hex": "72",
+      "alpha_len": 1,
+      "pi_hex":    "47b327393ff2dd81336f8a2ef10339112401253b3c714eeda879f12c509072ef055b48372bb82efbdce8e10c8cb9a2f9d60e93908f93df1623ad78a86a028d6bc064dbfc75a6a57379ef855dc6733801",
+      "beta_hex":  "38561d6b77b71d30eb97a062168ae12b667ce5c28caccdf76bc88e093e4635987cd96814ce55b4689b3dd2947f80e59aac7b7675f8083865b46c89b2ce9cc735"
+    },
+    {
+      "name":      "RFC 9381 §B.4 Example 21 (two-byte alpha 0xaf82)",
+      "sk_hex":    "c5aa8df43f9f837bedb7442f31dcb7b166d38535076f094b85ce3a2e0b4458f7",
+      "pk_hex":    "fc51cd8e6218a1a38da47ed00230f0580816ed13ba3303ac5deb911548908025",
+      "alpha_hex": "af82",
+      "alpha_len": 2,
+      "pi_hex":    "926e895d308f5e328e7aa159c06eddbe56d06846abf5d98c2512235eaa57fdce35b46edfc655bc828d44ad09d1150f31374e7ef73027e14760d42e77341fe05467bb286cc2c9d7fde29120a0b2320d04",
+      "beta_hex":  "121b7f9b9aaaa29099fc04a94ba52784d44eac976dd1a3cca458733be5cd090a7b5fbd148444f17f8daf1fb55cb04b1ae85a626e30a54b4b0f8abf4a43314a58"
+    }
+  ],
+  "negative_vectors": [
+    {
+      "name":     "tampered Gamma (bit-flip in pi[0])",
+      "based_on": "Example 19",
+      "tamper":   "pi[0] ^= 0x01",
+      "expected": "ANTS_ERROR_MALFORMED",
+      "notes":    "Decompression of the tampered Gamma either yields a non-curve point or a different point whose subsequent challenge doesn't match c_string."
+    },
+    {
+      "name":     "tampered challenge (bit-flip in pi[32])",
+      "based_on": "Example 19",
+      "tamper":   "pi[32] ^= 0x01",
+      "expected": "ANTS_ERROR_MALFORMED",
+      "notes":    "Tampered c causes the reconstructed c' to mismatch."
+    },
+    {
+      "name":     "tampered response s (bit-flip in pi[48])",
+      "based_on": "Example 19",
+      "tamper":   "pi[48] ^= 0x01",
+      "expected": "ANTS_ERROR_MALFORMED",
+      "notes":    "Tampered s shifts U, V and the reconstructed c' mismatches."
+    },
+    {
+      "name":     "tampered alpha (bit-flip in alpha[0])",
+      "based_on": "any non-empty-alpha vector",
+      "tamper":   "alpha[0] ^= 0x01",
+      "expected": "ANTS_ERROR_MALFORMED",
+      "notes":    "Changing alpha changes the hashed-to-curve point H, breaking verification."
+    },
+    {
+      "name":     "tampered PK (bit-flip in pk[0])",
+      "based_on": "Example 19",
+      "tamper":   "pk[0] ^= 0x01",
+      "expected": "ANTS_ERROR_MALFORMED",
+      "notes":    "Tampered PK either becomes non-canonical (rejected at the canonicalness check) or yields a different Y that breaks the verification equation."
+    }
+  ]
+}
