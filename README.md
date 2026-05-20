@@ -42,7 +42,7 @@ as components arrive):
 
 - BLAKE3 plain hash and `derive_key` per reserved context — first
   pack landed at [`vectors/blake3/blake3.json`](./vectors/blake3/blake3.json) (2026-05-20, alongside ants-client PR #7)
-- Ed25519 signature generation and verification
+- Ed25519 signature generation and verification — first pack at [`vectors/ed25519/ed25519.json`](./vectors/ed25519/ed25519.json) (2026-05-20, alongside ants-client PR #8). RFC 8032 §7.1 vectors verified.
 - BLS12-381 signature aggregation and verification
 - ECVRF-EDWARDS25519-SHA512-ELL2 prove and verify
 - CBOR canonical encoding of every protocol object type — feature-complete pack at [`vectors/cbor-canonical/`](./vectors/cbor-canonical/)
