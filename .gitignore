@@ -1,0 +1,14 @@
+# Generation scratch
+*.tmp
+*.bak
+*.swp
+.DS_Store
+
+# Editor / IDE
+.vscode/
+.idea/
+.cache/
+
+# Local
+.env
+*.local
