@@ -1,0 +1,91 @@
+{
+  "primitive": "cbor.encode_uint / cbor.decode_uint",
+  "spec":      "RFC-0008 §1.1, RFC 8949 §3 major type 0, §4.2.1 shortest-form",
+  "version":   1,
+  "vectors": [
+    {
+      "name":       "zero",
+      "input":      "0",
+      "input_repr": "uint64",
+      "output_hex": "00",
+      "notes":      "minimum value; fits in initial byte"
+    },
+    {
+      "name":       "one",
+      "input":      "1",
+      "input_repr": "uint64",
+      "output_hex": "01",
+      "notes":      "info < 24"
+    },
+    {
+      "name":       "23 (boundary, last 1-byte form)",
+      "input":      "23",
+      "input_repr": "uint64",
+      "output_hex": "17",
+      "notes":      "highest value that fits in initial byte alone"
+    },
+    {
+      "name":       "24 (boundary, first 2-byte form)",
+      "input":      "24",
+      "input_repr": "uint64",
+      "output_hex": "1818",
+      "notes":      "initial byte 0x18 indicates a 1-byte follow"
+    },
+    {
+      "name":       "25",
+      "input":      "25",
+      "input_repr": "uint64",
+      "output_hex": "1819",
+      "notes":      "still 2-byte form"
+    },
+    {
+      "name":       "255 (last 2-byte form)",
+      "input":      "255",
+      "input_repr": "uint64",
+      "output_hex": "18ff",
+      "notes":      "maximum value representable in 2-byte form"
+    },
+    {
+      "name":       "256 (first 3-byte form)",
+      "input":      "256",
+      "input_repr": "uint64",
+      "output_hex": "190100",
+      "notes":      "initial byte 0x19 indicates a 2-byte follow; big-endian"
+    },
+    {
+      "name":       "65535 (last 3-byte form)",
+      "input":      "65535",
+      "input_repr": "uint64",
+      "output_hex": "19ffff",
+      "notes":      "maximum value in 3-byte form"
+    },
+    {
+      "name":       "65536 (first 5-byte form)",
+      "input":      "65536",
+      "input_repr": "uint64",
+      "output_hex": "1a00010000",
+      "notes":      "initial byte 0x1a; 4-byte big-endian value"
+    },
+    {
+      "name":       "4294967295 (last 5-byte form)",
+      "input":      "4294967295",
+      "input_repr": "uint64 (2^32 - 1)",
+      "output_hex": "1affffffff",
+      "notes":      "maximum value in 5-byte form"
+    },
+    {
+      "name":       "4294967296 (first 9-byte form)",
+      "input":      "4294967296",
+      "input_repr": "uint64 (2^32)",
+      "output_hex": "1b0000000100000000",
+      "notes":      "initial byte 0x1b; 8-byte big-endian value"
+    },
+    {
+      "name":       "UINT64_MAX",
+      "input":      "18446744073709551615",
+      "input_repr": "uint64 (2^64 - 1)",
+      "output_hex": "1bffffffffffffffff",
+      "notes":      "maximum unsigned integer representable"
+    }
+  ]
+}

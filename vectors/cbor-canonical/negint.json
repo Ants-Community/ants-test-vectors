@@ -1,0 +1,85 @@
+{
+  "primitive": "cbor.encode_int / cbor.decode_int",
+  "spec":      "RFC-0008 §1.1, RFC 8949 §3 major type 1 (and major type 0 for non-negatives), §4.2.1 shortest-form",
+  "version":   1,
+  "notes":     "Major type 1 encodes the negative integer -1-n where n is the encoded value. Range: [-1, -2^64]; for int64_t the effective lower bound is INT64_MIN.",
+  "vectors": [
+    {
+      "name":       "zero (uses major 0)",
+      "input":      "0",
+      "input_repr": "int64",
+      "output_hex": "00",
+      "notes":      "non-negative path"
+    },
+    {
+      "name":       "23 (uses major 0)",
+      "input":      "23",
+      "input_repr": "int64",
+      "output_hex": "17",
+      "notes":      "non-negative path, info < 24"
+    },
+    {
+      "name":       "-1 (smallest negative)",
+      "input":      "-1",
+      "input_repr": "int64",
+      "output_hex": "20",
+      "notes":      "major type 1, info 0; encodes -1 - 0 = -1"
+    },
+    {
+      "name":       "-24 (boundary, last 1-byte negative)",
+      "input":      "-24",
+      "input_repr": "int64",
+      "output_hex": "37",
+      "notes":      "major type 1, info 23; encodes -1 - 23 = -24"
+    },
+    {
+      "name":       "-25 (first 2-byte negative)",
+      "input":      "-25",
+      "input_repr": "int64",
+      "output_hex": "3818",
+      "notes":      "major type 1, info 24; encoded value 24 -> -25"
+    },
+    {
+      "name":       "-100",
+      "input":      "-100",
+      "input_repr": "int64",
+      "output_hex": "3863",
+      "notes":      "encoded value 99 (= 0x63) -> -100"
+    },
+    {
+      "name":       "-1000",
+      "input":      "-1000",
+      "input_repr": "int64",
+      "output_hex": "3903e7",
+      "notes":      "encoded value 999 (= 0x03e7) -> -1000"
+    },
+    {
+      "name":       "INT64_MIN (-2^63)",
+      "input":      "-9223372036854775808",
+      "input_repr": "int64",
+      "output_hex": "3b7fffffffffffffff",
+      "notes":      "major type 1, info 27; encoded value 2^63 - 1; decoder must accept since -1 - (2^63 - 1) = -2^63 = INT64_MIN"
+    },
+    {
+      "name":       "INT64_MAX (uses major 0)",
+      "input":      "9223372036854775807",
+      "input_repr": "int64",
+      "output_hex": "1b7fffffffffffffff",
+      "notes":      "non-negative path"
+    }
+  ],
+  "negative_vectors": [
+    {
+      "name":      "uint just past INT64_MAX",
+      "input_hex": "1b8000000000000000",
+      "expected":  "ANTS_ERROR_OVERFLOW",
+      "notes":     "value 2^63 is one past INT64_MAX; decode_int must report overflow"
+    },
+    {
+      "name":      "negative just past INT64_MIN",
+      "input_hex": "3b8000000000000000",
+      "expected":  "ANTS_ERROR_OVERFLOW",
+      "notes":     "encoded value 2^63 would map to -1 - 2^63 = -(2^63 + 1), outside int64_t range"
+    }
+  ]
+}

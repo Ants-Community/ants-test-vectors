@@ -1,0 +1,44 @@
+{
+  "primitive": "cbor.encode_text / cbor.decode_text",
+  "spec":      "RFC-0008 §1.1, RFC 8949 §3 major type 3, §4.2.1 shortest-form length headers",
+  "version":   1,
+  "notes":     "Major type 3 is identical in encoding to major type 2 except the major-type bits. UTF-8 well-formedness of the payload is not validated by this codec (caller's responsibility).",
+  "vectors": [
+    {
+      "name":         "empty",
+      "input":        "",
+      "input_length": 0,
+      "output_hex":   "60",
+      "notes":        "initial byte 0x60 = major 3, length 0"
+    },
+    {
+      "name":         "ASCII ANTS",
+      "input":        "ANTS",
+      "input_length": 4,
+      "output_hex":   "64414e5453",
+      "notes":        "initial byte 0x64 = major 3, length 4"
+    },
+    {
+      "name":         "multibyte UTF-8 (caffè)",
+      "input":        "caffè",
+      "input_length": 6,
+      "output_hex":   "6663616666c3a8",
+      "notes":        "6 UTF-8 bytes: 'c','a','f','f',0xc3 0xa8 (è)"
+    },
+    {
+      "name":         "Italian phrase (la rete deve essere pura)",
+      "input":        "la rete deve essere pura",
+      "input_length": 24,
+      "output_hex":   "78186c612072657465206465766520657373657265207075726120",
+      "notes":        "length 24; uses 2-byte header form 0x78 0x18. Tribute to the language-decision rationale."
+    }
+  ],
+  "negative_vectors": [
+    {
+      "name":      "indefinite-length text string",
+      "input_hex": "7f614161426163ff",
+      "expected":  "ANTS_ERROR_NON_CANONICAL",
+      "notes":     "initial byte 0x7f = major 3, info 31 (indefinite); forbidden by §4.2.1"
+    }
+  ]
+}

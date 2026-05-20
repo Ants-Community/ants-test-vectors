@@ -1,0 +1,62 @@
+{
+  "primitive": "cbor.encode_bytes / cbor.decode_bytes",
+  "spec":      "RFC-0008 §1.1, RFC 8949 §3 major type 2, §4.2.1 shortest-form length headers",
+  "version":   1,
+  "vectors": [
+    {
+      "name":         "empty",
+      "input_hex":    "",
+      "input_length": 0,
+      "output_hex":   "40",
+      "notes":        "initial byte 0x40 = major 2, length 0"
+    },
+    {
+      "name":         "1 byte",
+      "input_hex":    "01",
+      "input_length": 1,
+      "output_hex":   "4101",
+      "notes":        "initial byte 0x41 = major 2, length 1"
+    },
+    {
+      "name":         "4 bytes",
+      "input_hex":    "01020304",
+      "input_length": 4,
+      "output_hex":   "4401020304",
+      "notes":        "initial byte 0x44 = major 2, length 4"
+    },
+    {
+      "name":         "23 bytes (last 1-byte header form)",
+      "input_hex":    "000102030405060708090a0b0c0d0e0f10111213141516",
+      "input_length": 23,
+      "output_hex":   "57000102030405060708090a0b0c0d0e0f10111213141516",
+      "notes":        "initial byte 0x57 = major 2, length 23"
+    },
+    {
+      "name":         "24 bytes (first 2-byte header form)",
+      "input_hex":    "000102030405060708090a0b0c0d0e0f101112131415161718",
+      "input_length": 24,
+      "output_hex":   "5818000102030405060708090a0b0c0d0e0f101112131415161718",
+      "notes":        "initial byte 0x58 = major 2, info 24 (1-byte length follows); length byte 0x18 = 24"
+    }
+  ],
+  "negative_vectors": [
+    {
+      "name":      "truncated 4-byte payload",
+      "input_hex": "440102",
+      "expected":  "ANTS_ERROR_MALFORMED",
+      "notes":     "header says length 4 but only 2 bytes of payload follow"
+    },
+    {
+      "name":      "non-shortest length header",
+      "input_hex": "580001",
+      "expected":  "ANTS_ERROR_NON_CANONICAL",
+      "notes":     "length 0 encoded with 2-byte header form; canonical requires length < 24 to use initial byte alone"
+    },
+    {
+      "name":      "indefinite-length byte string",
+      "input_hex": "5f4101ff",
+      "expected":  "ANTS_ERROR_NON_CANONICAL",
+      "notes":     "initial byte 0x5f = major 2, info 31 (indefinite); forbidden by §4.2.1"
+    }
+  ]
+}

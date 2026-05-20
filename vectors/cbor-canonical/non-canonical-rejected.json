@@ -1,0 +1,64 @@
+{
+  "primitive": "cbor.* (decoder)",
+  "spec":      "RFC-0008 §1.1, RFC 8949 §4.2.1",
+  "version":   1,
+  "notes":     "Cross-cutting negative-vector pack: inputs that are well-formed CBOR per §3 but violate the canonical-encoding rules of §4.2.1 and must therefore be rejected with ANTS_ERROR_NON_CANONICAL by the deterministic decoder.",
+  "negative_vectors": [
+    {
+      "name":         "uint 0 in 2-byte form (non-shortest)",
+      "input_hex":    "1800",
+      "decode_as":    "uint",
+      "expected":     "ANTS_ERROR_NON_CANONICAL",
+      "rule":         "shortest-form integer; value 0 must use the 1-byte form 0x00"
+    },
+    {
+      "name":         "uint 23 in 3-byte form (non-shortest)",
+      "input_hex":    "190017",
+      "decode_as":    "uint",
+      "expected":     "ANTS_ERROR_NON_CANONICAL",
+      "rule":         "shortest-form integer; value 23 must use the 1-byte form 0x17"
+    },
+    {
+      "name":         "uint 255 in 5-byte form (non-shortest)",
+      "input_hex":    "1a000000ff",
+      "decode_as":    "uint",
+      "expected":     "ANTS_ERROR_NON_CANONICAL",
+      "rule":         "shortest-form integer; value 255 must use the 2-byte form 0x18 0xff"
+    },
+    {
+      "name":         "uint 2^32-1 in 9-byte form (non-shortest)",
+      "input_hex":    "1b00000000ffffffff",
+      "decode_as":    "uint",
+      "expected":     "ANTS_ERROR_NON_CANONICAL",
+      "rule":         "shortest-form integer; value 2^32-1 fits in the 5-byte form"
+    },
+    {
+      "name":         "reserved additional-info 28",
+      "input_hex":    "1c",
+      "decode_as":    "uint",
+      "expected":     "ANTS_ERROR_NON_CANONICAL",
+      "rule":         "additional-info 28 is reserved by RFC 8949 and rejected under §4.2.1"
+    },
+    {
+      "name":         "reserved additional-info 29",
+      "input_hex":    "1d",
+      "decode_as":    "uint",
+      "expected":     "ANTS_ERROR_NON_CANONICAL",
+      "rule":         "additional-info 29 is reserved"
+    },
+    {
+      "name":         "reserved additional-info 30",
+      "input_hex":    "1e",
+      "decode_as":    "uint",
+      "expected":     "ANTS_ERROR_NON_CANONICAL",
+      "rule":         "additional-info 30 is reserved"
+    },
+    {
+      "name":         "indefinite-length item (major 0, info 31)",
+      "input_hex":    "1f",
+      "decode_as":    "uint",
+      "expected":     "ANTS_ERROR_NON_CANONICAL",
+      "rule":         "indefinite-length items are forbidden by §4.2.1; the additional-info value 31 is rejected regardless of major type"
+    }
+  ]
+}
