@@ -40,11 +40,12 @@ TestVector {
 Categories per RFC-0008 §8 (each will have multiple vector instances
 as components arrive):
 
-- BLAKE3 plain hash and `derive_key` per reserved context
+- BLAKE3 plain hash and `derive_key` per reserved context — first
+  pack landed at [`vectors/blake3/blake3.json`](./vectors/blake3/blake3.json) (2026-05-20, alongside ants-client PR #7)
 - Ed25519 signature generation and verification
 - BLS12-381 signature aggregation and verification
 - ECVRF-EDWARDS25519-SHA512-ELL2 prove and verify
-- CBOR canonical encoding of every protocol object type
+- CBOR canonical encoding of every protocol object type — feature-complete pack at [`vectors/cbor-canonical/`](./vectors/cbor-canonical/)
 - Merkle tree construction over logit traces (RFC-0003 §commit-at-send)
 - Fault proof verification (RFC-0004)
 - Beacon-derived selection (audit-flag, position-set, auditor) for given seeds
