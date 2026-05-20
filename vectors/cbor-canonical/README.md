@@ -64,9 +64,12 @@ group of negative-rejection vectors) and contains a JSON object:
 `non-canonical-rejected.json` are populated as of 2026-05-20 from
 the inline test vectors in `foundation/cbor/tests/test_cbor.c`.
 
+Added 2026-05-20 alongside ants-client PR #3 (major types 4 + 5):
+
+- [`array.json`](./array.json) — major type 4 round-trip + underfill + indefinite-rejection + non-shortest-rejection vectors
+- [`map.json`](./map.json) — major type 5 with canonical-key-order vectors (including length-tiebreak `{"a":1, "aa":2}`) + negative vectors for unsorted keys, duplicate keys, indefinite-length
+
 Pending (await encoder implementation of the relevant major type):
 
-- `array.json` — major type 4
-- `map.json` — major type 5 (including canonical-key-order vectors)
 - `tag.json` — major type 6 (RFC-0008 §1.1 reserved tags 0, 32, 42)
 - `simple.json` — major type 7 subset (bool, null)

@@ -1,0 +1,57 @@
+{
+  "primitive": "cbor.encode_array / cbor.decode_array",
+  "spec":      "RFC-0008 §1.1, RFC 8949 §3 major type 4, §4.2.1 shortest-form length headers",
+  "version":   1,
+  "vectors": [
+    {
+      "name":         "empty",
+      "input_items":  [],
+      "output_hex":   "80",
+      "notes":        "initial byte 0x80 = major 4, length 0"
+    },
+    {
+      "name":         "[1, 2, 3]",
+      "input_items":  ["uint(1)", "uint(2)", "uint(3)"],
+      "output_hex":   "83010203",
+      "notes":        "initial byte 0x83 = major 4, length 3"
+    },
+    {
+      "name":         "nested [[1,2],[3]]",
+      "input_items":  ["array(2)", "uint(1)", "uint(2)", "array(1)", "uint(3)"],
+      "output_hex":   "828201028103",
+      "notes":        "outer array of 2 inner arrays. 6 bytes."
+    },
+    {
+      "name":         "23 items (last 1-byte header form)",
+      "input_pattern": "array of 23 zeros",
+      "output_hex":   "970000000000000000000000000000000000000000000000",
+      "notes":        "initial byte 0x97 = major 4, length 23; followed by 23 × 0x00"
+    },
+    {
+      "name":         "24 items (first 2-byte header form)",
+      "input_pattern": "array of 24 zeros",
+      "output_hex":   "9818000000000000000000000000000000000000000000000000",
+      "notes":        "initial byte 0x98 = major 4, info 24 (1-byte length follows); length byte 0x18 = 24"
+    }
+  ],
+  "negative_vectors": [
+    {
+      "name":      "underfill (declared 3, only 2 items present)",
+      "input_hex": "830102",
+      "expected":  "ANTS_ERROR_MALFORMED",
+      "notes":     "header announces 3 items but only 2 follow; decoder hits EOF mid-container"
+    },
+    {
+      "name":      "indefinite-length array",
+      "input_hex": "9f010203ff",
+      "expected":  "ANTS_ERROR_NON_CANONICAL",
+      "notes":     "initial byte 0x9f = major 4, info 31 (indefinite); forbidden by §4.2.1"
+    },
+    {
+      "name":      "non-shortest length header (length 3 in 2-byte form)",
+      "input_hex": "9803010203",
+      "expected":  "ANTS_ERROR_NON_CANONICAL",
+      "notes":     "length 3 fits in initial byte alone (0x83); 2-byte form 0x98 0x03 is non-shortest"
+    }
+  ]
+}

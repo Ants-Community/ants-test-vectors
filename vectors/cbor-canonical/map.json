@@ -1,0 +1,73 @@
+{
+  "primitive": "cbor.encode_map / cbor.decode_map",
+  "spec":      "RFC-0008 §1.1, RFC 8949 §3 major type 5, §4.2.1 strict deterministic encoding incl. canonical-key-order",
+  "version":   1,
+  "notes":     "Map keys must be strictly monotonically increasing in bytewise lexicographic order of their canonical CBOR encoding (RFC 8949 §4.2.1). Duplicate keys are forbidden; out-of-order keys are forbidden. The decoder enforces this against the input buffer; the encoder enforces it against the buffer of previously-emitted keys. Per the test-vectors README, output_hex is the authoritative byte sequence; byte_breakdown is a developer-readable annotation.",
+  "vectors": [
+    {
+      "name":           "empty",
+      "output_hex":     "a0",
+      "byte_breakdown": "a0",
+      "notes":          "initial byte 0xa0 = major 5, length 0"
+    },
+    {
+      "name":           "{1: \"one\", 2: \"two\"}",
+      "output_hex":     "a201636f6e65026374776f",
+      "byte_breakdown": "a2 | 01 | 63 6f 6e 65 | 02 | 63 74 77 6f",
+      "byte_count":     11,
+      "notes":          "header 0xa2 (map, 2 pairs); key1 uint 1; value1 text 'one' (header 0x63 + payload 'one'); key2 uint 2; value2 text 'two'"
+    },
+    {
+      "name":           "{1: 10}",
+      "output_hex":     "a1010a",
+      "byte_breakdown": "a1 | 01 | 0a",
+      "byte_count":     3,
+      "notes":          "single-pair map; key uint 1 value uint 10"
+    },
+    {
+      "name":           "[{1:10}, {2:20}] (mixed array-of-maps)",
+      "output_hex":     "82a1010aa10214",
+      "byte_breakdown": "82 | a1 01 0a | a1 02 14",
+      "byte_count":     7,
+      "notes":          "outer 0x82 array(2); first item map{1:10}; second item map{2:20}"
+    },
+    {
+      "name":           "{\"a\": 1, \"b\": 2}",
+      "output_hex":     "a2616101616202",
+      "byte_breakdown": "a2 | 61 61 | 01 | 61 62 | 02",
+      "byte_count":     7,
+      "notes":          "Text keys. key1 'a' is encoded as header 0x61 (major 3, length 1) + payload 0x61 ('a'). key2 'b' is encoded as 0x61 + 0x62. Lexicographic ordering on canonical encodings: prefix 0x61 matches, second byte 0x61 < 0x62, so 'a' < 'b'."
+    },
+    {
+      "name":           "{\"a\": 1, \"aa\": 2} (length tiebreak: shorter key first)",
+      "output_hex":     "a261610162616102",
+      "byte_breakdown": "a2 | 61 61 | 01 | 62 61 61 | 02",
+      "byte_count":     8,
+      "notes":          "key1 'a' encodes as 0x61 0x61. key2 'aa' encodes as 0x62 (header major 3 length 2) + 0x61 0x61 (payload). Per §4.2.1: 0x61 < 0x62 in first byte of encoding, so 'a' < 'aa'."
+    }
+  ],
+  "negative_vectors": [
+    {
+      "name":           "unsorted keys (key 2 before key 1)",
+      "input_hex":      "a2026374776f01636f6e65",
+      "byte_breakdown": "a2 | 02 | 63 74 77 6f | 01 | 63 6f 6e 65",
+      "expected":       "ANTS_ERROR_NON_CANONICAL",
+      "notes":          "Map header announces 2 pairs. First pair: key uint 2, value text 'two'. Second pair starts with key uint 1, which is less than 2. Decoder rejects on second key."
+    },
+    {
+      "name":           "duplicate key",
+      "input_hex":      "a201636f6e6501636f6e65",
+      "byte_breakdown": "a2 | 01 | 63 6f 6e 65 | 01 | 63 6f 6e 65",
+      "expected":       "ANTS_ERROR_NON_CANONICAL",
+      "notes":          "Key uint 1 appears twice. Strict monotone order requires strict greater-than, so duplicates are rejected."
+    },
+    {
+      "name":           "indefinite-length map",
+      "input_hex":      "bf01636f6e65026374776fff",
+      "byte_breakdown": "bf | 01 63 6f 6e 65 | 02 63 74 77 6f | ff",
+      "expected":       "ANTS_ERROR_NON_CANONICAL",
+      "notes":          "initial byte 0xbf = major 5, info 31 (indefinite); forbidden by §4.2.1."
+    }
+  ],
+  "follow_up": "These vector files will be re-emitted as canonical-CBOR TestVector per RFC-0008 §8 once the CBOR encoder is feature-complete (tags + bool + null implemented and ants_cbor_is_canonical functional)."
+}
