@@ -1,0 +1,66 @@
+{
+  "primitive": "cbor.encode_tag / cbor.decode_tag",
+  "spec":      "RFC-0008 §1.1 (reserved tag set), RFC 8949 §3 major type 6, §4.2.1 shortest-form",
+  "version":   1,
+  "notes":     "Per RFC-0008 §1.1, the only accepted tag values are 0 (date-time string per RFC 8949 §3.4.1), 32 (URI per §3.4.5.3), and 42 (IPLD CID, custom). Any other tag value is rejected with ANTS_ERROR_UNSUPPORTED_TYPE. The tag header is followed by exactly one tagged item; the combined (tag header + tagged item) is treated as a single CBOR item by the surrounding container.",
+  "vectors": [
+    {
+      "name":           "tag 0 + uint 5",
+      "output_hex":     "c005",
+      "byte_breakdown": "c0 | 05",
+      "byte_count":     2,
+      "notes":          "tag 0 fits in initial byte (info < 24). 0xc0 = major 6, info 0. Followed by uint 5 (0x05)."
+    },
+    {
+      "name":           "tag 32 + uint 5",
+      "output_hex":     "d82005",
+      "byte_breakdown": "d8 20 | 05",
+      "byte_count":     3,
+      "notes":          "tag 32 needs 2-byte form (info 24, value 0x20). 0xd8 = major 6 + info 24. Followed by uint 5."
+    },
+    {
+      "name":           "tag 42 + text 'hi'",
+      "output_hex":     "d82a626869",
+      "byte_breakdown": "d8 2a | 62 68 69",
+      "byte_count":     5,
+      "notes":          "tag 42 in 2-byte form (0xd8 0x2a). Followed by text 'hi' (header 0x62 = major 3 length 2 + payload 'hi')."
+    },
+    {
+      "name":           "[tag 0 + uint 1, tag 32 + uint 2] (array of tagged items)",
+      "output_hex":     "82c001d82002",
+      "byte_breakdown": "82 | c0 01 | d8 20 02",
+      "byte_count":     6,
+      "notes":          "outer 0x82 array(2); first item tag 0 over uint 1; second item tag 32 over uint 2"
+    }
+  ],
+  "negative_vectors": [
+    {
+      "name":           "tag 1 (not in reserved set)",
+      "input_hex":      "c105",
+      "byte_breakdown": "c1 | 05",
+      "expected":       "ANTS_ERROR_UNSUPPORTED_TYPE",
+      "notes":          "tag 1 (well-formed per §3 but not in RFC-0008 §1.1 reserved set). Encoder and decoder both reject."
+    },
+    {
+      "name":           "tag 31 (well-formed canonical 2-byte form, not in reserved set)",
+      "input_hex":      "d81f05",
+      "byte_breakdown": "d8 1f | 05",
+      "expected":       "ANTS_ERROR_UNSUPPORTED_TYPE",
+      "notes":          "tag value 31 in info-24 form (2-byte header 0xd8 0x1f, then uint 5 payload). Canonical encoding (31 >= 24 so info-24 form is shortest). Well-formed but rejected because 31 is not in the reserved set. NOTE: the 1-byte form 0xdf for tag 31 does not exist in CBOR because info 31 in any major type means indefinite-length; tag 31 must use the 2-byte form."
+    },
+    {
+      "name":           "tag 100 (clearly outside reserved set, valid 2-byte form)",
+      "input_hex":      "d86405",
+      "byte_breakdown": "d8 64 | 05",
+      "expected":       "ANTS_ERROR_UNSUPPORTED_TYPE",
+      "notes":          "tag 100 = 0x64 in 2-byte form (info 24, value 0x64). Well-formed but not in reserved set."
+    },
+    {
+      "name":           "tag 32 in non-shortest 3-byte form",
+      "input_hex":      "d9002005",
+      "byte_breakdown": "d9 00 20 | 05",
+      "expected":       "ANTS_ERROR_NON_CANONICAL",
+      "notes":          "tag 32 in info-25 form (2-byte length), but 32 fits in info-24 (1-byte). The shortest-form check in cbor_read_head fires before the reserved-set check."
+    }
+  ]
+}

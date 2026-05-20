@@ -69,7 +69,11 @@ Added 2026-05-20 alongside ants-client PR #3 (major types 4 + 5):
 - [`array.json`](./array.json) — major type 4 round-trip + underfill + indefinite-rejection + non-shortest-rejection vectors
 - [`map.json`](./map.json) — major type 5 with canonical-key-order vectors (including length-tiebreak `{"a":1, "aa":2}`) + negative vectors for unsorted keys, duplicate keys, indefinite-length
 
-Pending (await encoder implementation of the relevant major type):
+Added 2026-05-20 alongside ants-client PR #4 (tag + bool + null):
 
-- `tag.json` — major type 6 (RFC-0008 §1.1 reserved tags 0, 32, 42)
-- `simple.json` — major type 7 subset (bool, null)
+- [`tag.json`](./tag.json) — major type 6 with the RFC-0008 §1.1 reserved tag set 0/32/42; round-trip vectors for each + array-of-tagged + negative vectors for tag 1/31/100 and non-shortest tag header
+- [`simple.json`](./simple.json) — major type 7 subset: false (0xf4), true (0xf5), null (0xf6), plus the canonical encoding of `{1: true, 2: null}`. Negative vectors cover decode_bool rejecting null, decode_null rejecting true, and the unsupported simple values (undefined 0xf7, float16 0xf9)
+
+Pending (await encoder implementation):
+
+- (none — the codec is feature-complete after PR #4; only `ants_cbor_is_canonical` validator remains, which doesn't add new byte-level encoding vectors)

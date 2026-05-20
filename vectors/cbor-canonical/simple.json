@@ -1,0 +1,66 @@
+{
+  "primitive": "cbor.encode_bool / cbor.decode_bool / cbor.encode_null / cbor.decode_null",
+  "spec":      "RFC-0008 §1.1, RFC 8949 §3.3 simple values: 20=false, 21=true, 22=null",
+  "version":   1,
+  "notes":     "Major type 7 simple values 20, 21, 22 are encoded in the 1-byte form (info < 24). Other type-7 simple values (e.g. 23 undefined, 24-31 floats and 'break' marker) are not part of the protocol's accepted subset; the decoder rejects them as ANTS_ERROR_UNSUPPORTED_TYPE per peek_type.",
+  "vectors": [
+    {
+      "name":           "false",
+      "output_hex":     "f4",
+      "byte_breakdown": "f4",
+      "byte_count":     1,
+      "notes":          "major 7 (0xe0), info 20 → 0xe0 | 0x14 = 0xf4"
+    },
+    {
+      "name":           "true",
+      "output_hex":     "f5",
+      "byte_breakdown": "f5",
+      "byte_count":     1,
+      "notes":          "major 7, info 21 → 0xf5"
+    },
+    {
+      "name":           "null",
+      "output_hex":     "f6",
+      "byte_breakdown": "f6",
+      "byte_count":     1,
+      "notes":          "major 7, info 22 → 0xf6"
+    },
+    {
+      "name":           "{1: true, 2: null} (map with simple values)",
+      "output_hex":     "a201f502f6",
+      "byte_breakdown": "a2 | 01 f5 | 02 f6",
+      "byte_count":     5,
+      "notes":          "map with simple-value values; canonical key order maintained"
+    }
+  ],
+  "negative_vectors": [
+    {
+      "name":           "decode_bool on null byte",
+      "input_hex":      "f6",
+      "decode_as":      "bool",
+      "expected":       "ANTS_ERROR_UNSUPPORTED_TYPE",
+      "notes":          "0xf6 is a valid null simple value but decode_bool only accepts 0xf4 / 0xf5"
+    },
+    {
+      "name":           "decode_null on true byte",
+      "input_hex":      "f5",
+      "decode_as":      "null",
+      "expected":       "ANTS_ERROR_UNSUPPORTED_TYPE",
+      "notes":          "0xf5 is a valid true bool but decode_null only accepts 0xf6"
+    },
+    {
+      "name":           "undefined simple value (info 23)",
+      "input_hex":      "f7",
+      "decode_as":      "any (via peek_type)",
+      "expected":       "ANTS_ERROR_UNSUPPORTED_TYPE",
+      "notes":          "0xf7 = major 7, info 23 = undefined; not part of the protocol's accepted simple-value subset"
+    },
+    {
+      "name":           "float16 (info 25)",
+      "input_hex":      "f93c00",
+      "decode_as":      "any (via peek_type)",
+      "expected":       "ANTS_ERROR_UNSUPPORTED_TYPE",
+      "notes":          "0xf9 = major 7, info 25 = float16. Floats are forbidden in protocol-level objects per RFC-0008 §1.3."
+    }
+  ]
+}
