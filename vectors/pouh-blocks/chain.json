@@ -1,0 +1,134 @@
+{
+  "primitive": "reputation-chain protocol objects: confirmed-proofs Merkle, EpochSummary, Block, VRF seed, proposer rule, pattern scan",
+  "spec": "RFC-0008 v0.6 \u00a711.4 + \u00a711.6 + \u00a74.2; RFC-0004 v0.7 \u00a7Layer 2",
+  "version": 1,
+  "generator": "ants-client reputation/chain/tools/chain_vectors.c - every value below is emitted by the compiled ants_chain library, never transcribed by hand (RFC-0008 \u00a78)",
+  "notes": "Canonical CBOR per RFC-0008 \u00a71.1; hex lowercase. Inputs are synthetic repeated-byte patterns chosen for cross-language reproducibility. The pattern-rule thresholds and windows are DRAFT b2-class values (RFC-0008 \u00a77). drand beacon rounds are deliberately not in this pack: they verify against the live drand chain itself (provenance pinned in the reference client's test_chain.c).",
+  "confirmed_root_vectors": [
+    {
+      "n_leaves": 0,
+      "leaves": "content_id[i] = 32 bytes of value i, i = 0..n-1",
+      "root_hex": "ab13bedf42e84bae0f7c62c7dd6a8ada571e8829bed6ea558217f0361b5e25d0",
+      "notes": "empty tree: BLAKE3(0x02)"
+    },
+    {
+      "n_leaves": 1,
+      "leaves": "content_id[i] = 32 bytes of value i, i = 0..n-1",
+      "root_hex": "232b17a92a13d46fdeeba07519406dcdad6d67b7399159364b5e26af0ab95bcf"
+    },
+    {
+      "n_leaves": 2,
+      "leaves": "content_id[i] = 32 bytes of value i, i = 0..n-1",
+      "root_hex": "601ae0d333efaf511cc72652be96836dc134955fc1c681ff185f99b5a12b2ae5"
+    },
+    {
+      "n_leaves": 3,
+      "leaves": "content_id[i] = 32 bytes of value i, i = 0..n-1",
+      "root_hex": "3f97043de3a7a8fe71e55454f9f9dead4e44301744481419a20754c5a4f5ee38"
+    },
+    {
+      "n_leaves": 5,
+      "leaves": "content_id[i] = 32 bytes of value i, i = 0..n-1",
+      "root_hex": "e6072121201b0f45dece141a4783b36b646b545bdde45368a59f50f52d4ecd55"
+    },
+    {
+      "n_leaves": 8,
+      "leaves": "content_id[i] = 32 bytes of value i, i = 0..n-1",
+      "root_hex": "d02f2e47c40dae9ee4408bea7af7b740ede960abf340d954e910250c1aa994cb"
+    }
+  ],
+  "inclusion_proof_vectors": [
+    {
+      "n_leaves": 1,
+      "leaf_index": 0,
+      "path_hex": "",
+      "verifies_against_root": true
+    },
+    {
+      "n_leaves": 3,
+      "leaf_index": 2,
+      "path_hex": "601ae0d333efaf511cc72652be96836dc134955fc1c681ff185f99b5a12b2ae5",
+      "verifies_against_root": true
+    },
+    {
+      "n_leaves": 5,
+      "leaf_index": 0,
+      "path_hex": "a2ddb4931d05ba6281549052c62d2780a2d3ac29514c0a77598283d61e861206c747007bb034f2e8f17688207accd745d7e5e4c12edddf7ddd331ef68f711b0decb2bfa29ca32cd4afafa7021bf444ce0956ad6f04d024d0a4ce5afe6f229d10",
+      "verifies_against_root": true
+    },
+    {
+      "n_leaves": 5,
+      "leaf_index": 4,
+      "path_hex": "0429a1b33a4380638861ac320355688368261d8ed7ff2acb4b9701a8480b9e4b",
+      "verifies_against_root": true
+    },
+    {
+      "n_leaves": 8,
+      "leaf_index": 5,
+      "path_hex": "ecb2bfa29ca32cd4afafa7021bf444ce0956ad6f04d024d0a4ce5afe6f229d1017739784ebb7d2244247f14c84924479bc853b82316e8986ba97e254e8adee670429a1b33a4380638861ac320355688368261d8ed7ff2acb4b9701a8480b9e4b",
+      "verifies_against_root": true
+    }
+  ],
+  "epoch_summary_vectors": [
+    {
+      "epoch": 42,
+      "cutoff_time": 1700000000,
+      "confirmed_proofs": "the n_leaves=3 root above",
+      "findings": [
+        {"subject": "32 bytes of 0x11", "rule_id": 1, "window_s": 2592000, "count": 3, "severity": 2},
+        {"subject": "32 bytes of 0x22", "rule_id": 1, "window_s": 2592000, "count": 7, "severity": 3}
+      ],
+      "encoded_hex": "a401182a021a6553f1000358203f97043de3a7a8fe71e55454f9f9dead4e44301744481419a20754c5a4f5ee380482a501582011111111111111111111111111111111111111111111111111111111111111110201031a00278d0004030502a501582022222222222222222222222222222222222222222222222222222222222222220201031a00278d0004070503"
+    }
+  ],
+  "block_vectors": [
+    {
+      "height": 7,
+      "prev_block_hash": "32 bytes of 0xab",
+      "degraded_seed": false,
+      "summary": "the epoch_summary vector above",
+      "encoded_hex": "a40107025820abababababababababababababababababababababababababababababababab03f404588fa401182a021a6553f1000358203f97043de3a7a8fe71e55454f9f9dead4e44301744481419a20754c5a4f5ee380482a501582011111111111111111111111111111111111111111111111111111111111111110201031a00278d0004030502a501582022222222222222222222222222222222222222222222222222222222222222220201031a00278d0004070503",
+      "block_hash_hex": "377bb6340b09dc53211d129ff7cfb9a07cf20cb75962bcbf88c6b372d011b562"
+    },
+    {
+      "height": 7,
+      "prev_block_hash": "32 bytes of 0xab",
+      "degraded_seed": true,
+      "summary": "the epoch_summary vector above",
+      "encoded_hex": "a40107025820abababababababababababababababababababababababababababababababab03f504588fa401182a021a6553f1000358203f97043de3a7a8fe71e55454f9f9dead4e44301744481419a20754c5a4f5ee380482a501582011111111111111111111111111111111111111111111111111111111111111110201031a00278d0004030502a501582022222222222222222222222222222222222222222222222222222222222222220201031a00278d0004070503",
+      "block_hash_hex": "0265f05628da510a29d6fa8708f11eefd1051a65c7a490b36c2158d2e51dd039"
+    }
+  ],
+  "vrf_seed_vectors": [
+    {
+      "context": "ants-v1-vrf-seed",
+      "prev_block_hash": "32 bytes of 0xcd",
+      "height": 9,
+      "randomness": "32 bytes of 0xef",
+      "seed_hex": "0e79b1df365c581ff25da57bba9a34c382d7b35aef764654075b1c499dae6acf"
+    },
+    {
+      "context": "ants-v1-vrf-seed-degraded",
+      "prev_block_hash": "32 bytes of 0xcd",
+      "height": 9,
+      "seed_hex": "58be8e75b60669226cc9a877ef43c792103904191e55b765d9a2bc5a0f415353"
+    }
+  ],
+  "proposer_vectors": [
+    {"height": 0, "k": 5, "member_position": 0},
+    {"height": 7, "k": 5, "member_position": 2},
+    {"height": 16, "k": 16, "member_position": 0},
+    {"height": 17, "k": 16, "member_position": 1},
+    {"height": 1000000, "k": 64, "member_position": 0}
+  ],
+  "pattern_scan_vectors": [
+    {
+      "now": 1700000000,
+      "events": "subject 0x11 at now-100/now-200/now-300; subject 0x22 at now-50 (subjects are 32 repeated bytes)",
+      "findings": [
+        {"subject_byte": "0x11", "rule_id": 1, "window_s": 2592000, "count": 3, "severity": 2},
+        {"subject_byte": "0x22", "rule_id": 1, "window_s": 2592000, "count": 1, "severity": 1}
+      ]
+    }
+  ]
+}
