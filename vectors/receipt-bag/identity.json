@@ -1,0 +1,104 @@
+{
+  "primitive": "reputation-identity selective disclosure: countersigned receipts, receipt-bag commitment + inclusion, (A, T) computation, A >= b proof, compact summary + per-bucket audit",
+  "spec": "RFC-0008 v0.7 \u00a711.9 + \u00a74.1 (ants-v1-receipt-bag-root); RFC-0004 v0.7 \u00a7Selective disclosure of receipts + \u00a7Compact summaries for large peers",
+  "version": 1,
+  "generator": "ants-client reputation/identity/tools/identity_vectors.c - every value below is emitted by the compiled ants_reputation library, never transcribed by hand (RFC-0008 \u00a78); every proof, signature, and verdict was re-verified through the library before printing",
+  "notes": "Canonical CBOR per RFC-0008 \u00a71.1; hex lowercase. Private keys and nonces are repeated-byte patterns for cross-language reproducibility; Ed25519 signing (RFC 8032) is deterministic, so the signatures are stable vectors. The decay/kappa parameters are the reference client's DRAFT defaults - b2-class, NOT calibrated (RFC-0004 \u00a7835) - so these vectors pin the RECIPE, and will be re-emitted with a version bump when calibration lands.",
+  "key_vectors": [
+    {"private": "32 bytes of 0x01", "role": "server", "public_hex": "8a88e3dd7409f195fd52db2d3cba5d72ca6709bf1d94121bf3748801b40f6f5c"},
+    {"private": "32 bytes of 0x02", "role": "client", "public_hex": "8139770ea87d175f56a35466c34c7ecccb8d8a91b4ee37a25df60f5b8fc9b394"},
+    {"private": "32 bytes of 0x03", "role": "other-server", "public_hex": "ed4928c628d1c2c6eae90338905995612959273a5c63f93636c14614ac8737d1"}
+  ],
+  "receipt_vectors": [
+    {
+      "server": "server",
+      "client": "client",
+      "ncs_value": 1073741824,
+      "timestamp_unix_s": 0,
+      "nonce": "16 bytes of 0x10",
+      "body_hex": "a50158208a88e3dd7409f195fd52db2d3cba5d72ca6709bf1d94121bf3748801b40f6f5c0258208139770ea87d175f56a35466c34c7ecccb8d8a91b4ee37a25df60f5b8fc9b394031a400000000400055010101010101010101010101010101010",
+      "server_sig_hex": "8377762956361040334d3d9293688ae8d5c086466677bdd32f2c4161c56f40bafe977778cde6b9ce424f3dc7f358e5b752458d60a9940ae0740837bd011e1306",
+      "client_sig_hex": "c2559cee14bc55daaaa62da184fe7478d6018850bef073a50604fd360d2bc99920140d8b3788053c744286b9597d29a278154cae3a3d012a65a662ae84b38a06",
+      "both_signatures_verify": true
+    },
+    {
+      "server": "server",
+      "client": "client",
+      "ncs_value": 1073741824,
+      "timestamp_unix_s": 600,
+      "nonce": "16 bytes of 0x11",
+      "body_hex": "a50158208a88e3dd7409f195fd52db2d3cba5d72ca6709bf1d94121bf3748801b40f6f5c0258208139770ea87d175f56a35466c34c7ecccb8d8a91b4ee37a25df60f5b8fc9b394031a4000000004190258055011111111111111111111111111111111",
+      "server_sig_hex": "6872cbea8bdc472bff8f3f235c61d763158f828cb61a050c7ba609617cb315060e72b4b953cd806262b3caa2528e5e1da4b4ebf379545a1ccc0f59ebe93be40d",
+      "client_sig_hex": "c20f0eb54d8b9d21323816d0abbeef36104e968e032e2d68192a43ff04f9b64e4b0469e99b26adfde488b372455fbb02688c2571e6ea9cdc5568e7d2ec45820d",
+      "both_signatures_verify": true
+    },
+    {
+      "server": "other-server",
+      "client": "client",
+      "ncs_value": 7777,
+      "timestamp_unix_s": 800,
+      "nonce": "16 bytes of 0x12",
+      "body_hex": "a5015820ed4928c628d1c2c6eae90338905995612959273a5c63f93636c14614ac8737d10258208139770ea87d175f56a35466c34c7ecccb8d8a91b4ee37a25df60f5b8fc9b39403191e6104190320055012121212121212121212121212121212",
+      "server_sig_hex": "5c13d4871492788cb6a3e0841358a8dbc1d0966acc5a6647b4431d4dd5fd3482eb5bc980223634f5197ce2b71dbad8bf27082e486ba91e66203022dc658e9d0c",
+      "client_sig_hex": "922b2a93812d3a52ce4a1a10d57b6c5b8929519c81f6cd4b040db1e2207a3da8190e0b04bdf629687d680b1a1ab5515d9a54e16a2948fe92815ffbd9a825d107",
+      "both_signatures_verify": true
+    },
+    {
+      "server": "server",
+      "client": "client",
+      "ncs_value": 12345,
+      "timestamp_unix_s": 86400,
+      "nonce": "16 bytes of 0x13",
+      "body_hex": "a50158208a88e3dd7409f195fd52db2d3cba5d72ca6709bf1d94121bf3748801b40f6f5c0258208139770ea87d175f56a35466c34c7ecccb8d8a91b4ee37a25df60f5b8fc9b39403193039041a00015180055013131313131313131313131313131313",
+      "server_sig_hex": "b4d2b5e4968a0816c8a38937edd1086cc0f8e91c1170a618f248c26296fd96461eef8e39068fa74587de5678a686bea5903bd953d97dde98e253dafc41c9d804",
+      "client_sig_hex": "bff312af448f1728b46ab336795a6bf6610762371f07cbedf62927e8c3b4b1f4cfb8b3728642ad07abb02b9e61ac647fe908df7e5ff17331fa52f33e194c2c03",
+      "both_signatures_verify": true
+    }
+  ],
+  "bag_root_vectors": [
+    {"n_receipts": 0, "peer": "server", "notes": "empty bag: merkle root = BLAKE3(0x02), then the derive_key peer binding", "bag_root_hex": "f67daf26a73dbf737882a371b02390df3c0ea742c965d684c7bc2f8c072390ba"},
+    {"n_receipts": 4, "peer": "server", "leaves": "the 4 receipts above in canonical order (timestamp ASC)", "bag_root_hex": "770b83259dbf1e5d12d59eb661294d416f3c8f81523e7f3c26faa226e037cddf"}
+  ],
+  "bag_inclusion_vectors": [
+    {"n_receipts": 4, "leaf_index": 0, "path_hex": "33a3cb9a980f74569f3f04d0942063e672b6a5cc2ef42807f9d15cb4bf2e259e9e32c1c5f3b02f751dc709a40ce2496bdff5924e3c1115102191b7abe6a6bde3", "verifies_against_bag_root": true},
+    {"n_receipts": 4, "leaf_index": 3, "path_hex": "a067d2a429a2c3f343649ab7cefb0a8433ceb37b6f28855c91bb38d4014d96d1708d95842f11fc19cd5a800fc66e992fb4027a890a98142f33f3982df6ebe707", "verifies_against_bag_root": true}
+  ],
+  "compute_vectors": [
+    {
+      "server": "server",
+      "bag": "the 4 receipts above",
+      "now_unix_s": 86400,
+      "params": "DRAFT defaults: decay_ratio_a_q32 = 2^31 (0.5), decay_ratio_t_q32 = 4252017623, kappa_uncs_per_bin = 1000000, bin_width_s = 3600",
+      "a_uncs": 12537,
+      "t_uncs": 798023,
+      "notes": "A is hand-checkable: receipt ages 24/23/0 whole bins under ratio 0.5 give 2^30>>24 + 2^30>>23 + 12345 = 64 + 128 + 12345 = 12537; the other-server receipt never credits this peer. T pins the kappa-clip + decay_T recipe over the same bag."
+    }
+  ],
+  "bound_vectors": [
+    {
+      "bound_b_uncs": 12400,
+      "now_unix_s": 86400,
+      "selected_indices_most_recent_first": [3, 1],
+      "reached": true,
+      "verifier_accepts_openings": true,
+      "notes": "hand-checkable: walking most-recent-first, 12345 (index 3) misses b, the other-server receipt (index 2) is ineligible, +128 (index 1) reaches 12473 >= 12400."
+    }
+  ],
+  "summary_vectors": [
+    {
+      "peer": "server",
+      "eval_time_unix_s": 86400,
+      "bucket_width_s": 86400,
+      "buckets": [[0, 192], [1, 12345]],
+      "body_hex": "a50158208a88e3dd7409f195fd52db2d3cba5d72ca6709bf1d94121bf3748801b40f6f5c025820770b83259dbf1e5d12d59eb661294d416f3c8f81523e7f3c26faa226e037cddf031a00015180041a000151800582820018c08201193039",
+      "sig_hex": "0e5cf4b5177081836ef773bceb6d3734b362e09670b78375cf2d936e900cd74df477467a3e8341bec3c293dfc2a3292311180dd24e9ef7b62fa274d0e3acc801",
+      "full_encoded_hex": "a60158208a88e3dd7409f195fd52db2d3cba5d72ca6709bf1d94121bf3748801b40f6f5c025820770b83259dbf1e5d12d59eb661294d416f3c8f81523e7f3c26faa226e037cddf031a00015180041a000151800582820018c082011930390658400e5cf4b5177081836ef773bceb6d3734b362e09670b78375cf2d936e900cd74df477467a3e8341bec3c293dfc2a3292311180dd24e9ef7b62fa274d0e3acc801",
+      "signature_verifies": true,
+      "notes": "bucket totals are decayed at the summary's own eval_time (the bit-exact audit instant): bucket 0 = 64 + 128 = 192, bucket 1 = 12345. The other-server receipt is in the tree but in no bucket."
+    }
+  ],
+  "summary_audit_vectors": [
+    {"audited_bucket_index": 0, "openings": "leaf indices 0 and 1 with their inclusion paths", "audit_passes": true},
+    {"audited_bucket_index": 0, "openings": "leaf index 0 only (64 < the stated 192)", "audit_passes": false}
+  ]
+}
