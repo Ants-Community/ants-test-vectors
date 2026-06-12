@@ -2,7 +2,8 @@
 
 Test-vector pack for the ANTS protocol's reference primitives.
 
-**Status:** scaffolding. Vectors will be generated as components in
+**Status:** six packs shipped (BLAKE3, Ed25519, BLS12-381, ECVRF-ELL2,
+canonical CBOR, L2 chain objects). Vectors are generated as components in
 [`Ants-Community/ants-client`](https://github.com/Ants-Community/ants-client)
 become feature-complete.
 
@@ -43,9 +44,10 @@ as components arrive):
 - BLAKE3 plain hash and `derive_key` per reserved context — first
   pack landed at [`vectors/blake3/blake3.json`](./vectors/blake3/blake3.json) (2026-05-20, alongside ants-client PR #7)
 - Ed25519 signature generation and verification — first pack at [`vectors/ed25519/ed25519.json`](./vectors/ed25519/ed25519.json) (2026-05-20, alongside ants-client PR #8). RFC 8032 §7.1 vectors verified.
-- BLS12-381 signature aggregation and verification
-- ECVRF-EDWARDS25519-SHA512-ELL2 prove and verify
+- BLS12-381 signature aggregation and verification — first pack at [`vectors/bls12-381/bls.json`](./vectors/bls12-381/bls.json) (2026-05-21, alongside ants-client PR #9)
+- ECVRF-EDWARDS25519-SHA512-ELL2 prove and verify — first pack at [`vectors/ecvrf-ell2/ecvrf.json`](./vectors/ecvrf-ell2/ecvrf.json) (2026-05-21; RFC 9381 §B.4 Examples 19/20/21 byte-exact)
 - CBOR canonical encoding of every protocol object type — feature-complete pack at [`vectors/cbor-canonical/`](./vectors/cbor-canonical/)
+- L2 chain objects (RFC-0008 §11.6): confirmed-proofs Merkle, EpochSummary, Block, VRF seeds, proposer rule — first pack at [`vectors/pouh-blocks/chain.json`](./vectors/pouh-blocks/chain.json) (2026-06-12, emitted by ants-client's committed `chain_vectors` tool)
 - Merkle tree construction over logit traces (RFC-0003 §commit-at-send)
 - Fault proof verification (RFC-0004)
 - Beacon-derived selection (audit-flag, position-set, auditor) for given seeds
@@ -73,8 +75,8 @@ A PR adding vectors must include:
 Vectors are **immutable once merged**. Errors in vectors are fixed by
 adding a corrected vector with a higher version suffix and deprecating
 the old one. The deprecation is recorded in
-[`CHANGELOG.md`](./CHANGELOG.md) (to be created when the first vector
-lands).
+[`CHANGELOG.md`](./CHANGELOG.md) (to be created at the first
+deprecation — none has happened yet).
 
 ## License
 
