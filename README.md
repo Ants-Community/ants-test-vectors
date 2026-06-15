@@ -2,8 +2,9 @@
 
 Test-vector pack for the ANTS protocol's reference primitives.
 
-**Status:** seven packs shipped (BLAKE3, Ed25519, BLS12-381, ECVRF-ELL2,
-canonical CBOR, L2 chain objects, receipt-bag selective disclosure).
+**Status:** nine packs shipped (BLAKE3, Ed25519, BLS12-381, ECDSA P-256,
+ECVRF-ELL2, canonical CBOR, L2 chain objects, receipt-bag selective
+disclosure, canonical embedding).
 Vectors are generated as components in
 [`Ants-Community/ants-client`](https://github.com/Ants-Community/ants-client)
 become feature-complete.
@@ -51,6 +52,7 @@ as components arrive):
 - L2 chain objects (RFC-0008 §11.6): confirmed-proofs Merkle, EpochSummary, Block, VRF seeds, proposer rule — first pack at [`vectors/pouh-blocks/chain.json`](./vectors/pouh-blocks/chain.json) (2026-06-12, emitted by ants-client's committed `chain_vectors` tool)
 - Receipt bodies, receipt-bag inclusion proofs, the `A ≥ b` proof, and compact summaries (RFC-0008 §11.9) — first pack at [`vectors/receipt-bag/identity.json`](./vectors/receipt-bag/identity.json) (2026-06-12, emitted by ants-client's committed `identity_vectors` tool)
 - Canonical embedding model `ants-embed-v1` (RFC-0008 §5/§5.1): pinned model hashes + reference embeddings (BGE-M3 dense, multilingual) — first pack at [`vectors/embedding/embedding.json`](./vectors/embedding/embedding.json) (2026-06-15, emitted by ants-client's `embed_vectors --pack`). The hashes are the bit-exact pin; the embeddings are cosine ≥ 0.999 reference, pending cross-platform F32 numerics (RFC-0009).
+- ECDSA P-256 signature verification (RFC-0005 TEE attestation chains; Intel TDX signs ECDSA P-256): valid + adversarial signatures from Project Wycheproof — first pack at [`vectors/ecdsa-p256/ecdsa-p256.json`](./vectors/ecdsa-p256/ecdsa-p256.json) (2026-06-15, emitted by ants-client's committed `ecdsa_p256_vectors` tool)
 - DHT RPC and gossip frame round-trips (RFC-0008 §11.2–§11.3)
 - Merkle tree construction over logit traces (RFC-0003 §commit-at-send)
 - Fault proof verification (RFC-0004)
