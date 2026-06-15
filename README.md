@@ -50,6 +50,7 @@ as components arrive):
 - CBOR canonical encoding of every protocol object type — feature-complete pack at [`vectors/cbor-canonical/`](./vectors/cbor-canonical/)
 - L2 chain objects (RFC-0008 §11.6): confirmed-proofs Merkle, EpochSummary, Block, VRF seeds, proposer rule — first pack at [`vectors/pouh-blocks/chain.json`](./vectors/pouh-blocks/chain.json) (2026-06-12, emitted by ants-client's committed `chain_vectors` tool)
 - Receipt bodies, receipt-bag inclusion proofs, the `A ≥ b` proof, and compact summaries (RFC-0008 §11.9) — first pack at [`vectors/receipt-bag/identity.json`](./vectors/receipt-bag/identity.json) (2026-06-12, emitted by ants-client's committed `identity_vectors` tool)
+- Canonical embedding model `ants-embed-v1` (RFC-0008 §5/§5.1): pinned model hashes + reference embeddings (BGE-M3 dense, multilingual) — first pack at [`vectors/embedding/embedding.json`](./vectors/embedding/embedding.json) (2026-06-15, emitted by ants-client's `embed_vectors --pack`). The hashes are the bit-exact pin; the embeddings are cosine ≥ 0.999 reference, pending cross-platform F32 numerics (RFC-0009).
 - DHT RPC and gossip frame round-trips (RFC-0008 §11.2–§11.3)
 - Merkle tree construction over logit traces (RFC-0003 §commit-at-send)
 - Fault proof verification (RFC-0004)
