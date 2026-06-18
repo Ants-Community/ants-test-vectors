@@ -2,9 +2,9 @@
 
 Test-vector pack for the ANTS protocol's reference primitives.
 
-**Status:** ten packs shipped (BLAKE3, Ed25519, BLS12-381, ECDSA P-256,
+**Status:** eleven packs shipped (BLAKE3, Ed25519, BLS12-381, ECDSA P-256,
 ECDSA P-384, ECVRF-ELL2, canonical CBOR, L2 chain objects, receipt-bag
-selective disclosure, canonical embedding).
+selective disclosure, canonical embedding, AMD SEV-SNP report verification).
 Vectors are generated as components in
 [`Ants-Community/ants-client`](https://github.com/Ants-Community/ants-client)
 become feature-complete.
@@ -54,6 +54,7 @@ as components arrive):
 - Canonical embedding model `ants-embed-v1` (RFC-0008 §5/§5.1): pinned model hashes + reference embeddings (BGE-M3 dense, multilingual) — first pack at [`vectors/embedding/embedding.json`](./vectors/embedding/embedding.json) (2026-06-15, emitted by ants-client's `embed_vectors --pack`). The hashes are the bit-exact pin; the embeddings are cosine ≥ 0.999 reference, pending cross-platform F32 numerics (RFC-0009).
 - ECDSA P-256 signature verification (RFC-0005 TEE attestation chains; Intel TDX signs ECDSA P-256): valid + adversarial signatures from Project Wycheproof — first pack at [`vectors/ecdsa-p256/ecdsa-p256.json`](./vectors/ecdsa-p256/ecdsa-p256.json) (2026-06-15, emitted by ants-client's committed `ecdsa_p256_vectors` tool)
 - ECDSA P-384 signature verification (RFC-0005 TEE attestation chains; AMD SEV-SNP signs ECDSA P-384): valid + adversarial signatures from Project Wycheproof — first pack at [`vectors/ecdsa-p384/ecdsa-p384.json`](./vectors/ecdsa-p384/ecdsa-p384.json) (2026-06-16, emitted by ants-client's committed `ecdsa_p384_vectors` tool)
+- AMD SEV-SNP attestation report signature verification (RFC-0005 TEE attestation): a genuine report from real AMD Milan silicon (`go-sev-guest` testdata, OpenSSL-confirmed) + single-byte mutations — first pack at [`vectors/snp-report/snp-report.json`](./vectors/snp-report/snp-report.json) (2026-06-18, emitted by ants-client's committed `snp_vectors` tool)
 - DHT RPC and gossip frame round-trips (RFC-0008 §11.2–§11.3)
 - Merkle tree construction over logit traces (RFC-0003 §commit-at-send)
 - Fault proof verification (RFC-0004)
