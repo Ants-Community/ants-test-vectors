@@ -2,9 +2,10 @@
 
 Test-vector pack for the ANTS protocol's reference primitives.
 
-**Status:** eleven packs shipped (BLAKE3, Ed25519, BLS12-381, ECDSA P-256,
+**Status:** twelve packs shipped (BLAKE3, Ed25519, BLS12-381, ECDSA P-256,
 ECDSA P-384, ECVRF-ELL2, canonical CBOR, L2 chain objects, receipt-bag
-selective disclosure, canonical embedding, AMD SEV-SNP report verification).
+selective disclosure, canonical embedding, AMD SEV-SNP report verification,
+Intel TDX DCAP quote verification).
 Vectors are generated as components in
 [`Ants-Community/ants-client`](https://github.com/Ants-Community/ants-client)
 become feature-complete.
