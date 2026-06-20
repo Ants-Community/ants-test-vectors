@@ -2,9 +2,10 @@
 
 Test vector files. One subdirectory per component / primitive.
 
-**Status:** twelve packs shipped — `blake3/`, `ed25519/`, `bls12-381/`,
-`ecdsa-p256/`, `ecdsa-p384/`, `ecvrf-ell2/`, `cbor-canonical/`, `pouh-blocks/`,
-`receipt-bag/`, `embedding/`, `snp-report/`, `tdx-quote/`. Vectors land as components in
+**Status:** thirteen packs shipped — `blake3/`, `ed25519/`, `bls12-381/`,
+`ecdsa-p256/`, `ecdsa-p384/`, `rsa-pss/`, `ecvrf-ell2/`, `cbor-canonical/`,
+`pouh-blocks/`, `receipt-bag/`, `embedding/`, `snp-report/`, `tdx-quote/`.
+Vectors land as components in
 [`Ants-Community/ants-client`](https://github.com/Ants-Community/ants-client)
 become feature-complete. `pouh-blocks/` is the first pack emitted by a
 committed generator tool from the compiled reference library
